@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dibyani's Christmas Gift</title>
+    <style>
+        /* Your existing styles */
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #CC231E;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gift-card {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: calc(100% - 40px);
+            max-width: 400px;
+            z-index: 2;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            color: #cc3333;
+        }
+
+        h2 {
+            color: #008000;
+            font-size: 1.5em;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .link {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .link:hover {
+            color: #1e90ff;
+        }
+
+        p {
+            color: #333;
+            line-height: 1.5;
+            font-size: 1.1em;
+        }
+
+        .snowflakes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="snowflakes"></div>
+        <div class="gift-card">
+            <h1>🎄 Dibyani's Christmas Gift 🎁</h1>
+            <h2>"Kuch samajh hi ni aya kya du, to socha tumhi le logi kuch apne se 😂"</h2>
+            <a href="https://www.amazon.in/g/OSR1U8R9VM3BGQH5?_encoding=UTF8&asin=B0BMLHHTXV" class="link">Get your Christmas Gift here!</a>
+            <!-- <p><span style="color:red; font-weight:bold">Note:</span> Aur mere pass ek Chocolate bhi hai yaad se le lena lunch se pahle nahi to mai khaa jaungan 🥱<br> Happy Shopping!</p> -->
+            <p>Redeem this code on Amazon and enjoy your shopping!</p>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var COUNT = 300;
+            var masthead = document.querySelector('.container');
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            var width = masthead.clientWidth;
+            var height = masthead.clientHeight;
+            var i = 0;
+            var active = false;
+
+            function onResize() {
+                width = masthead.clientWidth;
+                height = masthead.clientHeight;
+                canvas.width = width;
+                canvas.height = height;
+                ctx.fillStyle = '#FFF';
+
+                var wasActive = active;
+                active = width > 600;
+
+                if (!wasActive && active)
+                    requestAnimFrame(update);
+            }
+
+            var Snowflake = function () {
+                this.x = 0;
+                this.y = 0;
+                this.vy = 0;
+                this.vx = 0;
+                this.r = 0;
+
+                this.reset();
+            }
+
+            Snowflake.prototype.reset = function () {
+                this.x = Math.random() * width;
+                this.y = Math.random() * -height;
+                this.vy = 1 + Math.random() * 3;
+                this.vx = 0.5 - Math.random();
+                this.r = 1 + Math.random() * 2;
+                this.o = 0.5 + Math.random() * 0.5;
+            }
+
+            canvas.style.position = 'absolute';
+            canvas.style.left = canvas.style.top = '0';
+
+            var snowflakes = [], snowflake;
+            for (i = 0; i < COUNT; i++) {
+                snowflake = new Snowflake();
+                snowflake.reset();
+                snowflakes.push(snowflake);
+            }
+
+            function update() {
+
+                ctx.clearRect(0, 0, width, height);
+
+                if (!active)
+                    return;
+
+                for (i = 0; i < COUNT; i++) {
+                    snowflake = snowflakes[i];
+                    snowflake.y += snowflake.vy;
+                    snowflake.x += snowflake.vx;
+
+                    ctx.globalAlpha = snowflake.o;
+                    ctx.beginPath();
+                    ctx.arc(snowflake.x, snowflake.y, snowflake.r, 0, Math.PI * 2, false);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    if (snowflake.y > height) {
+                        snowflake.reset();
+                    }
+                }
+
+                requestAnimFrame(update);
+            }
+
+            window.requestAnimFrame = (function () {
+                return window.requestAnimationFrame ||
+                    window.webkitRequestAnimationFrame ||
+                    window.mozRequestAnimationFrame ||
+                    function (callback) {
+                        window.setTimeout(callback, 1000 / 60);
+                    };
+            })();
+
+            onResize();
+            window.addEventListener('resize', onResize, false);
+
+            masthead.appendChild(canvas);
+        })();
+    </script>
+</body>
+
+</html>
